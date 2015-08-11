@@ -2,14 +2,60 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>无标题文档</title>
+<title>Document</title>
+<style>
+#div1{ width:200px; height:200px; position:absolute; left:0; top:0; background:red;}
+</style>
+<script>
+function Drag(){
+	this.oDiv=document.getElementById('div1');
+	this.disX=0;
+	this.disY=0;
+	
+	var _this=this;
+	this.oDiv.onmousedown=function(ev){
+		var oEvent=ev || event;
+		_this.fnDown(oEvent);	
+		_this.oDiv.setCapture && _this.oDiv.setCapture();
+		return false;
+	};
+}
+Drag.prototype.fnDown=function(ev){
+	var oEvent=ev || event;
+	var _this=this;
+	
+	this.disX=oEvent.clientX-this.oDiv.offsetLeft;
+	this.disY=oEvent.clientY-this.oDiv.offsetTop;
+	
+	document.onmousemove=function(ev){
+		var oEvent=ev || event;
+		_this.fnMove(oEvent);	
+	};
+	document.onmouseup=function(){
+		_this.fnUp();	
+	};
+}
 
+Drag.prototype.fnMove=function(ev){
+	var oEvent=ev || event;
+	
+	this.oDiv.style.left=oEvent.clientX-this.disX+'px';
+	this.oDiv.style.top=oEvent.clientY-this.disY+'px';	
+}
+
+Drag.prototype.fnUp=function(){
+	document.onmousemove=null;
+	document.onmouseup=null;	
+	this.oDiv.releaseCapture && this.oDiv.releaseCapture();
+}
+window.onload=function(){
+	new Drag();	
+}
+</script>
 </head>
 
 <body>
-<div id="drag"></div>
-
-
-<script src="drag.js"></script>
+adfasdfasdfasdfasd
+<div id="div1"></div>
 </body>
 </html>
